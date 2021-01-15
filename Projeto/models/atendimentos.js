@@ -30,31 +30,29 @@ class Atendimento {
     }
 
     adiciona(atendimento) {
-        
         const dataCriacao = moment().format('YYYY-MM-DD HH:MM:SS')
-        const data_agendamento = moment(atendimento.data_agendamento, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
+        const data = moment(atendimento.data, 'DD/MM/YYYY').format(
+            'YYYY-MM-DD HH:MM:SS'
+        )
 
         const parametros = {
-            data_agendamento: { data_agendamento, dataCriacao },
+            data: { data, dataCriacao },
             cliente: { tamanho: atendimento.cliente.length }
         }
 
         const erros = this.valida(parametros)
         const existemErros = erros.length
 
-        if(existemErros) {
+        if (existemErros) {
             return new Promise((resolve, reject) => reject(erros))
         } else {
-            
-            const atendimentoDatado = {...atendimento, dataCriacao, data_agendamento}
-            
-            return repositorio.adiciona(atendimentoDatado)
-                .then(resultados => {
-                    const id = resultados.insertId
-                    return ({ ...atendimento, id})
-                })
+            const atendimentoDatado = { ...atendimento, dataCriacao, data }
+
+            return repositorio.adiciona(atendimentoDatado).then(resultados => {
+                const id = resultados.insertId
+                return { ...atendimento, id }
+            })
         }
-      
     }
 
     lista() {
@@ -62,8 +60,10 @@ class Atendimento {
     }
 
     buscaPorID(id) {
+        const sql = `SELECT * FROM Atendimentos WHERE id=${id}`
+
     
-        conexao,query(sql, async (erro, resultados) => {
+        conexao.query(sql, async (erro, resultados) => {
             const atendimento = resultados[0]
             const cpf = atendimento.cliente
             if (erro) {
