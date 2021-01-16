@@ -17,11 +17,13 @@ class Serializador {
                 }
             })
         }
+
         return jsontoxml({ [tag]: dados })
     }
 
     serializar (dados) {
         dados = this.filtrar(dados)
+
         if (this.contentType === 'application/json') {
             return this.json(dados)
         }
@@ -29,9 +31,9 @@ class Serializador {
         if (this.contentType === 'application/xml') {
             return this.xml(dados)
         }
-        
+
         throw new ValorNaoSuportado(this.contentType)
-    }  
+    }
 
     filtrarObjeto (dados) {
         const novoObjeto = {}
@@ -44,19 +46,18 @@ class Serializador {
 
         return novoObjeto
     }
-    
+
     filtrar (dados) {
         if (Array.isArray(dados)) {
             dados = dados.map(item => {
                 return this.filtrarObjeto(item)
             })
         } else {
-            dados = this.filtrarObjeto
+            dados = this.filtrarObjeto(dados)
         }
 
         return dados
     }
-    
 }
 
 class SerializadorFornecedor extends Serializador {
@@ -70,6 +71,19 @@ class SerializadorFornecedor extends Serializador {
         ].concat(camposExtras || [])
         this.tagSingular = 'fornecedor'
         this.tagPlural = 'fornecedores'
+    }
+}
+
+class SerializadorProduto extends Serializador {
+    constructor (contentType, camposExtras) {
+        super()
+        this.contentType = contentType
+        this.camposPublicos = [
+            'id',
+            'titulo'
+        ].concat(camposExtras || [])
+        this.tagSingular = 'produto'
+        this.tagPlural = 'produtos'
     }
 }
 
@@ -90,5 +104,6 @@ module.exports = {
     Serializador: Serializador,
     SerializadorFornecedor: SerializadorFornecedor,
     SerializadorErro: SerializadorErro,
+    SerializadorProduto: SerializadorProduto,
     formatosAceitos: ['application/json', 'application/xml']
 }

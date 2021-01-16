@@ -2,9 +2,8 @@ const TabelaFornecedor = require('./TabelaFornecedor')
 const CampoInvalido = require('../../erros/CampoInvalido')
 const DadosNaoFornecidos = require('../../erros/DadosNaoFornecidos')
 
-
 class Fornecedor {
-    constructor ({ id, empresa, email, categoria, dataCriacao, dataAtualizacao, versao}) {
+    constructor ({ id, empresa, email, categoria, dataCriacao, dataAtualizacao, versao }) {
         this.id = id
         this.empresa = empresa
         this.email = email
@@ -26,7 +25,6 @@ class Fornecedor {
         this.dataCriacao = resultado.dataCriacao
         this.dataAtualizacao = resultado.dataAtualizacao
         this.versao = resultado.versao
-
     }
 
     async carregar () {
@@ -37,7 +35,6 @@ class Fornecedor {
         this.dataCriacao = encontrado.dataCriacao
         this.dataAtualizacao = encontrado.dataAtualizacao
         this.versao = encontrado.versao
-
     }
 
     async atualizar () {
@@ -48,7 +45,7 @@ class Fornecedor {
         campos.forEach((campo) => {
             const valor = this[campo]
 
-            if (typeof valor === 'string' && valor.length > 0 ) {
+            if (typeof valor === 'string' && valor.length > 0) {
                 dadosParaAtualizar[campo] = valor
             }
         })

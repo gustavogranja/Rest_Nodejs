@@ -9,7 +9,7 @@ module.exports = {
         return Modelo.create(fornecedor)
     },
     async pegarPorId (id) {
-        const encontrado =  await Modelo.findOne({
+        const encontrado = await Modelo.findOne({
             where: {
                 id: id
             }
@@ -21,7 +21,7 @@ module.exports = {
 
         return encontrado
     },
-    async atualizar (id, dadosParaAtualizar) {
+    atualizar (id, dadosParaAtualizar) {
         return Modelo.update(
             dadosParaAtualizar,
             {
@@ -34,6 +34,4 @@ module.exports = {
             where: { id: id }
         })
     }
-
-
 }

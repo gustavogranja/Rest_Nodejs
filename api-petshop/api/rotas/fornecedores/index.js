@@ -10,7 +10,7 @@ roteador.get('/', async (requisicao, resposta) => {
         resposta.getHeader('Content-Type')
     )
     resposta.send(
-        serializador.serializador(resultados)
+        serializador.serializar(resultados)
     )
 })
 
@@ -24,7 +24,7 @@ roteador.post('/', async (requisicao, resposta, proximo) => {
             resposta.getHeader('Content-Type')
         )
         resposta.send(
-            serializador.serializador(fornecedor)
+            serializador.serializar(fornecedor)
         )
     } catch (erro) {
         proximo(erro)
@@ -42,8 +42,8 @@ roteador.get('/:idFornecedor', async (requisicao, resposta, proximo) => {
             ['email', 'dataCriacao', 'dataAtualizacao', 'versao']
         )
         resposta.send(
-            serializador.serializador(fornecedor)
-    )
+            serializador.serializar(fornecedor)
+        )
     } catch (erro) {
         proximo(erro)
     }
@@ -72,8 +72,24 @@ roteador.delete('/:idFornecedor', async (requisicao, resposta, proximo) => {
         resposta.status(204)
         resposta.end()
     } catch (erro) {
-       proximo(erro)
+        proximo(erro)
     }
 })
+
+const roteadorProdutos = require('./produtos')
+
+const verificarFornecedor = async (requisicao, resposta, proximo) => {
+    try {
+        const id = requisicao.params.idFornecedor
+        const fornecedor = new Fornecedor({ id: id })
+        await fornecedor.carregar()
+        requisicao.fornecedor = fornecedor
+        proximo()
+    } catch (erro) {
+        proximo(erro)
+    }
+}
+
+roteador.use('/:idFornecedor/produtos', verificarFornecedor, roteadorProdutos)
 
 module.exports = roteador
