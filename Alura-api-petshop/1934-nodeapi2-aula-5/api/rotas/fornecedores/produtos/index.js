@@ -44,7 +44,7 @@ roteador.post('/', async (requisicao, resposta, proximo) => {
 })
 
 roteador.options('/:id', (requisicao, resposta) => {
-    resposta.set('Access-Control-Allow-Methods', 'GET, PUT, DELETE, HEAD')
+    resposta.set('Access-Control-Allow-Methods', 'DELETE, GET, HEAD, PUT')
     resposta.set('Access-Control-Allow-Headers', 'Content-Type')
     resposta.status(204)
     resposta.end()
@@ -78,7 +78,6 @@ roteador.get('/:id', async (requisicao, resposta, proximo) => {
         resposta.set('ETag', produto.versao)
         const timestamp = (new Date(produto.dataAtualizacao)).getTime()
         resposta.set('Last-Modified', timestamp)
-    
         resposta.send(
             serializador.serializar(produto)
         )
@@ -96,7 +95,6 @@ roteador.head('/:id', async (requisicao, resposta, proximo) => {
     
         const produto = new Produto(dados)
         await produto.carregar()
-
         resposta.set('ETag', produto.versao)
         const timestamp = (new Date(produto.dataAtualizacao)).getTime()
         resposta.set('Last-Modified', timestamp)
